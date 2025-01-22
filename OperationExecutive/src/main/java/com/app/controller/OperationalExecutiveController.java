@@ -17,7 +17,7 @@ public class OperationalExecutiveController {
 	RestTemplate rs;
 	@GetMapping("/getenquirydata/{customerID}")
 	public ResponseEntity<EnquiryDetails> getenquirydata(@PathVariable int customerID) {
-		String urlToGetEnquiryData="http://navnath:8080/app/api/enquiry/"+customerID;
+		String urlToGetEnquiryData="http://localhost:8080/app/api/enquiry/"+customerID;
 		EnquiryDetails enq=rs.getForObject(urlToGetEnquiryData, EnquiryDetails.class) ;
 		String urlToGetCibilData="http://localhost:9090/api/cibil/get";
 		CibilScoreData cibil=rs.getForObject(urlToGetCibilData, CibilScoreData.class);
