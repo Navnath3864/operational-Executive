@@ -44,7 +44,7 @@ public class OperationalExecutiveController {
 		String email = enquiryDetails.getEmail();
 		System.out.println(email);
 		System.out.println(cibilRemark);
-		if (cibilRemark == "Applicable") {
+		if ("Applicable".equals(cibilRemark)) {
 			System.out.println(cibilRemark);
 			SimpleMailMessage simple = new SimpleMailMessage();
 			simple.setTo(email);
