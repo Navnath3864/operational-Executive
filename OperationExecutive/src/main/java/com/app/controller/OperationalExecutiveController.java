@@ -24,37 +24,43 @@ public class OperationalExecutiveController {
 	@Autowired
 	JavaMailSender sender;
 
-	
 	@Value("${spring.mail.username}")
 	private static String SEND_FROM;
 	@Autowired
 	RestTemplate rs;
+
 	@GetMapping("/getenquirydata/{customerID}")
 	public ResponseEntity<EnquiryDetails> getenquirydata(@PathVariable int customerID) {
 		String urlToGetEnquiryData = "http://localhost:8080/app/api/enquiry/" + customerID;
 		EnquiryDetails enq = rs.getForObject(urlToGetEnquiryData, EnquiryDetails.class);
 		String urlToGetCibilData = "http://localhost:9090/api/cibil/get";
 		CibilScoreData cibil = rs.getForObject(urlToGetCibilData, CibilScoreData.class);
-		enq.setCibilScoreData(cibil);		
+		enq.setCibilScoreData(cibil);
 		return new ResponseEntity<EnquiryDetails>(enq, HttpStatus.OK);
 	}
 
+	@GetMapping("/sentMailToCustomer")
 	public void sentMailToCusotmer(EnquiryDetails enquiryDetails) {
-		String cibilRemark = enquiryDetails.getCibilScoreData().getCibilRemark();
+		String enquiryStatus = enquiryDetails.getEnquiryStatus();
+		SimpleMailMessage simple = new SimpleMailMessage();
 		String email = enquiryDetails.getEmail();
-		System.out.println(email);
-		System.out.println(cibilRemark);
-		if ("Applicable".equals(cibilRemark)) {
-			System.out.println(cibilRemark);
-			SimpleMailMessage simple = new SimpleMailMessage();
+		if ("approved".equals(enquiryStatus)) {
+
 			simple.setTo(email);
 			simple.setFrom(SEND_FROM);
 			simple.setSubject("Your Loan Request is Approved!");
 			simple.setText("Thank you!");
 			sender.send(simple);
+
+		}
+		if ("rejected".equals(enquiryStatus)) {
+			simple.setTo(email);
+			simple.setFrom(SEND_FROM);
+			simple.setSubject("Your Loan Request is Rejected!");
+			simple.setText("Thank you!");
+			sender.send(simple);
+
 		}
 	}
-	
-	
-	
+
 }

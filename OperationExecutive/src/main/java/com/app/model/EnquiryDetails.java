@@ -13,7 +13,6 @@ public class EnquiryDetails {
 	private long mobileNo;
 	private String enquiryStatus ="pending";
 	private String pancardNo;
-	
 
 	private CibilScoreData cibilScoreData;
 
