@@ -52,6 +52,7 @@ public class OperationalExecutiveController {
 			simple.setSubject("Your Loan Request is Approved!");
 			simple.setText("Thank you!");
 			sender.send(simple);
+			
 		}
 	}
 }
