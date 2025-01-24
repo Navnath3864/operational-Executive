@@ -16,7 +16,6 @@ import org.springframework.web.client.RestTemplate;
 
 import com.app.model.CibilScoreData;
 import com.app.model.EnquiryDetails;
-import com.app.service.OperationExecutiveService;
 
 @RestController
 @RequestMapping("/oe")
@@ -25,8 +24,6 @@ public class OperationalExecutiveController {
 	@Autowired
 	JavaMailSender sender;
 
-	@Autowired
-	OperationExecutiveService executiveService;
 	
 	@Value("${spring.mail.username}")
 	private static String SEND_FROM;
@@ -38,10 +35,7 @@ public class OperationalExecutiveController {
 		EnquiryDetails enq = rs.getForObject(urlToGetEnquiryData, EnquiryDetails.class);
 		String urlToGetCibilData = "http://localhost:9090/api/cibil/get";
 		CibilScoreData cibil = rs.getForObject(urlToGetCibilData, CibilScoreData.class);
-		enq.setCibilScoreData(cibil);
-		executiveService.savaEnquiry(enq);
-//		sentMailToCusotmer(enq);
-		
+		enq.setCibilScoreData(cibil);		
 		return new ResponseEntity<EnquiryDetails>(enq, HttpStatus.OK);
 	}
 
