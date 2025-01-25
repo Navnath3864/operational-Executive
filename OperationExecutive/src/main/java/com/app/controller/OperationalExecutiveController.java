@@ -86,7 +86,7 @@ public class OperationalExecutiveController {
 	public void sendMail(String tomail,CibilScoreData cibil){
 		SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
 		
-		simpleMailMessage.setFrom("navnathgutte20@gmail.com");
+		simpleMailMessage.setFrom("thoratharshada065@gmail.com");
 		simpleMailMessage.setTo(tomail);
 		simpleMailMessage.setSubject("Loan Enquiry Details");
 		simpleMailMessage.setText("your cibil details"+
