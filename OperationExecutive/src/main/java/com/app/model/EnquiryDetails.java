@@ -11,7 +11,9 @@ public class EnquiryDetails {
 	private int age;
 	private String email;
 	private long mobileNo;
-	private String enquiryStatus ="pending";
+ 
+	private String enquiryStatus;
+ 
 	private String pancardNo;
 
 	private CibilScoreData cibilScoreData;
