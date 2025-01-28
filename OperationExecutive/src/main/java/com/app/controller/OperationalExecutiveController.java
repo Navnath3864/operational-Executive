@@ -1,11 +1,15 @@
 package com.app.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
@@ -21,7 +25,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import com.app.model.CibilScoreData;
+import com.app.model.CustomerLoanApplication;
 import com.app.model.EnquiryDetails;
+
+
+
 
 @RestController
 @RequestMapping("/oe")
@@ -86,4 +94,41 @@ public class OperationalExecutiveController {
 	} 
 	
 	
+	
+	
+//	@GetMapping("/getallcustomerdataloanstatussubmitted")
+//	public ResponseEntity<List<CustomerLoanApplication>> getAllCustomerDataLoanStatusSubmitted() {
+//	    
+//	    String urlToGetCustomerLoanApplication = "http://localhost:8080/app/api/getAllLoansubmited";
+//
+//	    CustomerLoanApplication[] cs = rs.getForObject(urlToGetCustomerLoanApplication, CustomerLoanApplication[].class);
+//
+//	    List<CustomerLoanApplication> customerLoanApplications = new ArrayList<>(Arrays.asList(cs));
+//
+//	    return new ResponseEntity<>(customerLoanApplications, HttpStatus.OK);
+//	}
+	
+	
+	@PutMapping("/loanStatusSubmited/{id}")
+	public ResponseEntity<List<CustomerLoanApplication>> loanStatusSubmited(@RequestBody CustomerLoanApplication cs,@PathVariable int id ) {
+ 
+		String url = "http://localhost:8080/app/api/getAllLoansubmited";
+ 
+		ResponseEntity<List<CustomerLoanApplication>> response = rs.exchange(url, HttpMethod.GET, null,
+				new ParameterizedTypeReference<List<CustomerLoanApplication>>() {
+				});
+ 
+		List<CustomerLoanApplication> loanApplications = response.getBody();
+ 
+		for (CustomerLoanApplication loanApplication : loanApplications) {
+			loanApplication.setLoanStatus(cs.getLoanStatus());
+ 
+			String updateUrl = "http://localhost:8080/app/api/updateLoanstatus/" +id ;
+			rs.put(updateUrl, loanApplication);
+		}
+ 
+		return new ResponseEntity<>(loanApplications, HttpStatus.ACCEPTED);
+	}
 }
+
+
