@@ -116,10 +116,11 @@ public class OperationalExecutiveController {
 	public ResponseEntity<List<EnquiryDetails>> getPendingEnquiriesFromEnquiryForm(@RequestBody List<EnquiryDetails> ls){
 		for(EnquiryDetails enq : ls) {
 			if(enq.getEnquiryStatus().equals("cibilpending")) {
-				
+			
 				String urlToGetCibilData="http://localhost:9090/api/cibil/get";
 				CibilScoreData cibil=rs.getForObject(urlToGetCibilData, CibilScoreData.class);
 				enq.setCibilScoreData(cibil);
+			
 				String url ="http://localhost:8080/app/api/updateenquirydetails/"+enq.getCustomerID();
 				rs.put(url, enq, EnquiryDetails.class);
 				sendMail(enq.getEmail(),cibil);
@@ -147,7 +148,7 @@ public class OperationalExecutiveController {
 	
 	@PutMapping("/loanStatusSubmited/{id}")
 	public ResponseEntity<List<CustomerLoanApplication>> loanStatusSubmited(@RequestBody CustomerLoanApplication cs,@PathVariable int id ) {
- 
+		
 		String url = "http://localhost:8080/app/api/getAllLoansubmited";
  
 		ResponseEntity<List<CustomerLoanApplication>> response = rs.exchange(url, HttpMethod.GET, null,
@@ -158,7 +159,7 @@ public class OperationalExecutiveController {
  
 		for (CustomerLoanApplication loanApplication : loanApplications) {
 			loanApplication.setLoanStatus(cs.getLoanStatus());
- 
+		
 			String updateUrl = "http://localhost:8080/app/api/updateLoanstatus/" +id ;
 			rs.put(updateUrl, loanApplication);
 		}
