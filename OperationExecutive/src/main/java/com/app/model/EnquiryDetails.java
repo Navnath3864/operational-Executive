@@ -9,10 +9,11 @@ public class EnquiryDetails {
 	private String lastName;
 	private int age;
 	private String email;
+	private String password;
 	private long mobileNo;
-	private String enquiryStatus;
+	private String enquiryStatus=null;
 	private String pancardNo;
-	
+	private String role;
 	private CibilScoreData cibilScoreData;
 
 }

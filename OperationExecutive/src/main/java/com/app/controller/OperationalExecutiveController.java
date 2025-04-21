@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +25,7 @@ import org.springframework.web.client.RestTemplate;
 import com.app.model.CibilScoreData;
 import com.app.model.CustomerLoanApplication;
 import com.app.model.EnquiryDetails;
-
+@CrossOrigin("http://localhost:5173")
 @RestController
 @RequestMapping("/oe")
 public class OperationalExecutiveController {
@@ -47,7 +48,7 @@ public class OperationalExecutiveController {
 		LOGGER.info("Received GET request for CIBIL Data");
 		String urlToGetCibilData = "http://localhost:9090/api/cibil/get";
 		CibilScoreData cibil = rs.getForObject(urlToGetCibilData, CibilScoreData.class);
-		sendMail(enq.getEmail(), cibil);
+	//	sendMail(enq.getEmail(), cibil);
 
 		enq.setCibilScoreData(cibil);
 
@@ -56,8 +57,8 @@ public class OperationalExecutiveController {
 
 	public void sendMail(String tomail, CibilScoreData cibil) {
 		SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-
-		simpleMailMessage.setFrom("thoratharshada065@gmail.com");
+		System.out.println("mailID : "+SEND_FROM);
+		simpleMailMessage.setFrom(SEND_FROM);
 		simpleMailMessage.setTo(tomail);
 		simpleMailMessage.setSubject("Loan Enquiry Details");
 		simpleMailMessage.setText("your cibil details" + "\n Cibil score : " + cibil.getCibilScore()
@@ -86,6 +87,7 @@ public class OperationalExecutiveController {
 		return new ResponseEntity<List<EnquiryDetails>>(ls, HttpStatus.OK);
 	}
 
+	
 	@PutMapping("/loanStatusSubmited/{id}")
 	public ResponseEntity<List<CustomerLoanApplication>> loanStatusSubmited(@RequestBody CustomerLoanApplication cs,
 			@PathVariable int id) {
@@ -107,4 +109,15 @@ public class OperationalExecutiveController {
 
 		return new ResponseEntity<>(loanApplications, HttpStatus.ACCEPTED);
 	}
+	/*********************************************************************************************************/
+	@GetMapping("/cibilpendingdata")
+	public ResponseEntity<List<EnquiryDetails>> getcibilPendingDataFromEnquiryDetails(){
+		String url="http://localhost:8080/app/api/getcibilpending/enquiry";
+		List<EnquiryDetails> ls=rs.getForObject(url, List.class);
+		return new ResponseEntity<List<EnquiryDetails>>(ls,HttpStatus.OK);
+		
+	} 
+	
+	
+	
 }
