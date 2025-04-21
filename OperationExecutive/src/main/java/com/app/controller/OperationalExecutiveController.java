@@ -31,7 +31,7 @@ import com.app.model.EnquiryDetails;
 public class OperationalExecutiveController {
 	@Autowired
 	RestTemplate rs;
-
+    
 	@Autowired
 	JavaMailSender sender;
 
